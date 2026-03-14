@@ -1,0 +1,140 @@
+# Heart Disease Prediction & Classification — ML Mini Project
+
+A machine learning project that **predicts and distinguishes between different types of heart disease** using clinical patient data. The project trains multiple classifiers, compares them, and provides detailed evaluation metrics and visualizations.
+
+---
+
+## Dataset
+
+**UCI Cleveland Heart Disease Dataset** (publicly available)
+- 303 patient records, 14 clinical features
+- Target column: `num` → 0 (no disease), 1–4 (different severity/type of disease)
+- Multi-class classification problem (5 classes: 0, 1, 2, 3, 4)
+
+> [!NOTE]
+> The Cleveland dataset's `num` value gives us 5 distinct categories (0 = healthy, 1–4 = increasing severity of heart disease), which directly maps to "distinguishing between different types."
+
+---
+
+## Project Structure
+
+```
+mll/
+├── data/
+│   └── heart.csv              # Cleveland dataset (auto-downloaded)
+├── models/
+│   └── best_model.pkl         # Saved trained model
+├── plots/
+│   └── *.png                  # Generated visualizations
+├── src/
+│   ├── data_loader.py         # Load & inspect raw data
+│   ├── preprocessing.py       # Clean, encode, scale features
+│   ├── train.py               # Train & save multiple models
+│   ├── evaluate.py            # Metrics, confusion matrix, ROC
+│   └── model_comparison.py   # Compare all models side-by-side
+├── tests/
+│   └── test_pipeline.py       # Automated unit tests
+├── heart_disease_analysis.ipynb  # End-to-end Jupyter notebook
+├── requirements.txt
+└── README.md
+```
+
+---
+
+## Proposed Changes
+
+### Data Layer
+
+#### [NEW] [data_loader.py](file:///c:/Users/RABUL/Desktop/mll/src/data_loader.py)
+- Auto-downloads the Cleveland Heart Disease dataset via `ucimlrepo`
+- Returns a raw pandas DataFrame with the `num` target column (0–4)
+
+#### [NEW] [preprocessing.py](file:///c:/Users/RABUL/Desktop/mll/src/preprocessing.py)
+- Handles missing values (a few `?` values in `ca` and `thal` columns)
+- Encodes categorical features (e.g. `thal`, `cp`)
+- Scales numerical features with `StandardScaler`
+- Splits data into train/test (80/20 stratified)
+
+---
+
+### Model Layer
+
+**Models trained:** Logistic Regression, Random Forest, SVM, K-Nearest Neighbors, XGBoost (Gradient Boosting)
+
+#### [NEW] [train.py](file:///c:/Users/RABUL/Desktop/mll/src/train.py)
+- Trains all 5 classifiers on preprocessed data
+- Uses `GridSearchCV` for hyperparameter tuning on best model
+- Saves each model as a `.pkl` file
+
+#### [NEW] [evaluate.py](file:///c:/Users/RABUL/Desktop/mll/src/evaluate.py)
+- Prints classification report (precision, recall, F1 per class)
+- Plots confusion matrix heatmap for each model
+- Plots multi-class ROC curves (One-vs-Rest)
+
+#### [NEW] [model_comparison.py](file:///c:/Users/RABUL/Desktop/mll/src/model_comparison.py)
+- Bar chart comparing all models by accuracy, macro-F1, training time
+
+---
+
+### Notebook & Documentation
+
+#### [NEW] [heart_disease_analysis.ipynb](file:///c:/Users/RABUL/Desktop/mll/heart_disease_analysis.ipynb)
+- Full end-to-end walkthrough: EDA → preprocessing → training → evaluation
+- Rich visualizations: feature distributions, correlation heatmap, confusion matrices, ROC curves
+- Markdown explanations for each step (suitable for submitting as a project)
+
+#### [NEW] [requirements.txt](file:///c:/Users/RABUL/Desktop/mll/requirements.txt)
+```
+pandas
+numpy
+scikit-learn
+matplotlib
+seaborn
+xgboost
+ucimlrepo
+joblib
+jupyter
+ipykernel
+```
+
+---
+
+### Tests
+
+#### [NEW] [test_pipeline.py](file:///c:/Users/RABUL/Desktop/mll/tests/test_pipeline.py)
+- Tests data loading returns a non-empty DataFrame
+- Tests preprocessing produces correct train/test shapes
+- Tests that all 5 models train without error
+- Tests that accuracy on test set is ≥ 50% (sanity check for multi-class)
+
+---
+
+## Verification Plan
+
+### Automated Tests
+```powershell
+# Install dependencies
+pip install -r C:\Users\RABUL\Desktop\mll\requirements.txt
+
+# Run unit tests
+python -m pytest C:\Users\RABUL\Desktop\mll\tests\test_pipeline.py -v
+```
+Expected: all tests pass ✅
+
+### Run Training Pipeline
+```powershell
+python C:\Users\RABUL\Desktop\mll\src\train.py
+```
+Expected: 5 models trained, accuracy printed, `best_model.pkl` saved.
+
+### Run Evaluation
+```powershell
+python C:\Users\RABUL\Desktop\mll\src\evaluate.py
+```
+Expected: Classification reports printed, confusion matrix + ROC plots saved to `plots/`.
+
+### Open Jupyter Notebook
+```powershell
+jupyter notebook C:\Users\RABUL\Desktop\mll\heart_disease_analysis.ipynb
+```
+Expected: All cells run without error, all visualizations display correctly.

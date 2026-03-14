@@ -22,7 +22,12 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import warnings
 warnings.filterwarnings("ignore")
+import subprocess, sys, os
 
+if os.environ.get("STREAMLIT_RUNNING") != "1":
+    os.environ["STREAMLIT_RUNNING"] = "1"
+    subprocess.run([sys.executable, "-m", "streamlit", "run", __file__])
+    sys.exit()
 # ── Path setup so we can import src/ modules ─────────────────────────────────
 BASE_DIR  = os.path.dirname(os.path.abspath(__file__))
 SRC_DIR   = os.path.join(BASE_DIR, "src")
